@@ -2,10 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:todolist/constants/constants.dart';
 import 'package:todolist/repositories/auth_repository.dart';
 import 'package:todolist/screens/login_screen.dart';
-import 'package:todolist/screens/register_screen.dart';
-
-import '../widgets/showLoadingDialog.dart';
-import 'home_screen.dart';
+import '../widgets/show_loading_dialog.dart';
 
 class ResetPassword extends StatefulWidget {
   const ResetPassword({super.key});
@@ -41,7 +38,6 @@ class _ResetPasswordState extends State<ResetPassword> {
                   'assets/images/img_header_login.png',
                   fit: BoxFit.contain,
                 ),
-                
                 const Positioned(
                   bottom: 15,
                   child: Column(
@@ -127,7 +123,6 @@ class _ResetPasswordState extends State<ResetPassword> {
                       controller: _emailController,
                     ),
                   ),
-                 
                   const SizedBox(
                     height: 30,
                   ),
@@ -139,26 +134,28 @@ class _ResetPasswordState extends State<ResetPassword> {
                         String email = _emailController.text;
                         bool result =
                             await AuthRepository().resetPassword(email);
-                        Navigator.pop(context);
-                        if (result) {
-                           ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              backgroundColor: colorPrimary,
-                              content: Text(
-                                'Please check email to reset password',
-                                style: TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.w600,
-                                  color: Colors.white,
+                        if (context.mounted) {
+                          Navigator.pop(context);
+                          if (result) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                backgroundColor: colorPrimary,
+                                content: Text(
+                                  'Please check email to reset password',
+                                  style: TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.w600,
+                                    color: Colors.white,
+                                  ),
                                 ),
                               ),
-                            ),
-                          );
-                          Navigator.of(context).pushReplacement(
-                            MaterialPageRoute(
-                              builder: (context) => const LoginScreen(),
-                            ),
-                          );
+                            );
+                            Navigator.of(context).pushReplacement(
+                              MaterialPageRoute(
+                                builder: (context) => const LoginScreen(),
+                              ),
+                            );
+                          }
                         } else {
                           ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(
@@ -200,7 +197,6 @@ class _ResetPasswordState extends State<ResetPassword> {
                   const SizedBox(
                     height: 20,
                   ),
-                
                 ],
               ),
             ),

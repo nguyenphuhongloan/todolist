@@ -4,7 +4,7 @@ import 'package:todolist/repositories/auth_repository.dart';
 import 'package:todolist/screens/register_screen.dart';
 import 'package:todolist/screens/reset_password.dart';
 
-import '../widgets/showLoadingDialog.dart';
+import '../widgets/show_loading_dialog.dart';
 import 'home_screen.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -208,7 +208,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     alignment: Alignment.centerRight,
                     child: GestureDetector(
                       onTap: () {
-                         Navigator.push(
+                        Navigator.push(
                           context,
                           MaterialPageRoute(
                               builder: (context) => const ResetPassword()),
@@ -240,27 +240,29 @@ class _LoginScreenState extends State<LoginScreen> {
                         String password = _passwordController.text;
                         bool result =
                             await AuthRepository().login(email, password);
-                        Navigator.pop(context);
-                        if (result) {
-                          Navigator.of(context).pushReplacement(
-                            MaterialPageRoute(
-                              builder: (context) => const HomeScreen(),
-                            ),
-                          );
-                        } else {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              backgroundColor: colorPrimary,
-                              content: Text(
-                                'Credentials are not correct!',
-                                style: TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.w600,
-                                  color: Colors.white,
+                        if (mounted) {
+                          Navigator.pop(context);
+                          if (result) {
+                            Navigator.of(context).pushReplacement(
+                              MaterialPageRoute(
+                                builder: (context) => const HomeScreen(),
+                              ),
+                            );
+                          } else {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                backgroundColor: colorPrimary,
+                                content: Text(
+                                  'Credentials are not correct!',
+                                  style: TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.w600,
+                                    color: Colors.white,
+                                  ),
                                 ),
                               ),
-                            ),
-                          );
+                            );
+                          }
                         }
                       }
                     },
@@ -301,7 +303,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => RegisterScreen()),
+                                    builder: (context) => const RegisterScreen()),
                               );
                             },
                             child: const Text(

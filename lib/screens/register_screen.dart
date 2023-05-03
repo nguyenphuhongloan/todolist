@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:todolist/constants/constants.dart';
 import 'package:todolist/repositories/auth_repository.dart';
 
-import '../widgets/showLoadingDialog.dart';
+import '../widgets/show_loading_dialog.dart';
 import 'home_screen.dart';
 
 class RegisterScreen extends StatefulWidget {
@@ -44,21 +44,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   'assets/images/img_header_login.png',
                   fit: BoxFit.contain,
                 ),
-                // Positioned(
-                //   top: 75,
-                //   left: 20,
-                //   child: Container(
-                //     padding: const EdgeInsets.all(10),
-                //     decoration: BoxDecoration(
-                //       borderRadius: BorderRadius.circular(15),
-                //       color: Colors.white,
-                //     ),
-                //     child: const Icon(
-                //       Icons.arrow_back,
-                //       size: 16,
-                //     ),
-                //   ),
-                // ),
                 const Positioned(
                   bottom: 15,
                   child: Column(
@@ -281,29 +266,31 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         String password = _passwordController.text;
                         bool result =
                             await AuthRepository().register(email, password);
-                        Navigator.pop(context);
-                        if (result) {
-                          Navigator.pushAndRemoveUntil(
-                            context,
-                            MaterialPageRoute(
-                                builder: (BuildContext context) =>
-                                    HomeScreen()),
-                            (Route<dynamic> route) => false,
-                          );
-                        } else {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              backgroundColor: colorPrimary,
-                              content: Text(
-                                'Email Already Exist',
-                                style: TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.w600,
-                                  color: Colors.white,
+                        if (mounted) {
+                          Navigator.pop(context);
+                          if (result) {
+                            Navigator.pushAndRemoveUntil(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (BuildContext context) =>
+                                      const HomeScreen()),
+                              (Route<dynamic> route) => false,
+                            );
+                          } else {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                backgroundColor: colorPrimary,
+                                content: Text(
+                                  'Email Already Exist',
+                                  style: TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.w600,
+                                    color: Colors.white,
+                                  ),
                                 ),
                               ),
-                            ),
-                          );
+                            );
+                          }
                         }
                       }
                     },

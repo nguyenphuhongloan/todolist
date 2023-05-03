@@ -13,9 +13,8 @@ class App extends StatefulWidget {
 class _AppState extends State<App> {
   @override
   Widget build(BuildContext context) {
-    print(FirebaseAuth.instance.currentUser);
     return FirebaseAuth.instance.currentUser != null
-        ? HomeScreen()
-        : LoginScreen();
+        ? const HomeScreen()
+        : const LoginScreen();
   }
 }

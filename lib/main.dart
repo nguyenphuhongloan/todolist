@@ -7,7 +7,6 @@ import 'firebase_options.dart';
 
 void main() async {
   SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
-   // systemNavigationBarColor: Colors.transparent,
     statusBarColor: colorPrimary,
   ));
   WidgetsFlutterBinding.ensureInitialized();
@@ -28,7 +27,6 @@ class _MainAppState extends State<MainApp> {
   @override
   Widget build(BuildContext context) {
     return const MaterialApp(
-      
         debugShowCheckedModeBanner: false, color: colorPrimary, home: App());
   }
 }

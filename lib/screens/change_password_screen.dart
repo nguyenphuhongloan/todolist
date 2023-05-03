@@ -2,9 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:todolist/constants/constants.dart';
 import 'package:todolist/repositories/auth_repository.dart';
-import 'package:todolist/screens/register_screen.dart';
-
-import '../widgets/showLoadingDialog.dart';
+import '../widgets/show_loading_dialog.dart';
 import 'home_screen.dart';
 
 class ChangePasswordScreen extends StatefulWidget {
@@ -331,42 +329,44 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                         String password = _passwordController.text;
                         String newPassword = _newPasswordController.text;
 
-                        bool result =
-                            await AuthRepository().changePassword(email, password, newPassword);
-                        Navigator.pop(context);
-                        if (result) {
-                           ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              backgroundColor: colorPrimary,
-                              content: Text(
-                                'Password Changed!',
-                                style: TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.w600,
-                                  color: Colors.white,
+                        bool result = await AuthRepository()
+                            .changePassword(email, password, newPassword);
+                        if (context.mounted) {
+                          Navigator.pop(context);
+                          if (result) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                backgroundColor: colorPrimary,
+                                content: Text(
+                                  'Password Changed!',
+                                  style: TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.w600,
+                                    color: Colors.white,
+                                  ),
                                 ),
                               ),
-                            ),
-                          );
-                          Navigator.of(context).pushReplacement(
-                            MaterialPageRoute(
-                              builder: (context) => const HomeScreen(),
-                            ),
-                          );
-                        } else {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              backgroundColor: colorPrimary,
-                              content: Text(
-                                'Credentials are not correct!',
-                                style: TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.w600,
-                                  color: Colors.white,
+                            );
+                            Navigator.of(context).pushReplacement(
+                              MaterialPageRoute(
+                                builder: (context) => const HomeScreen(),
+                              ),
+                            );
+                          } else {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                backgroundColor: colorPrimary,
+                                content: Text(
+                                  'Credentials are not correct!',
+                                  style: TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.w600,
+                                    color: Colors.white,
+                                  ),
                                 ),
                               ),
-                            ),
-                          );
+                            );
+                          }
                         }
                       }
                     },
@@ -394,7 +394,6 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                   const SizedBox(
                     height: 20,
                   ),
-                  
                 ],
               ),
             ),

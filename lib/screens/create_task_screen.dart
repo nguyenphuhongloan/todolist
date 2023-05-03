@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:todolist/constants/constants.dart';
 import 'package:todolist/repositories/task_repository.dart';
-import 'package:todolist/screens/home_screen.dart';
-
 import '../models/task.dart';
 
 class CreateTaskScreen extends StatefulWidget {
@@ -18,6 +16,7 @@ class CreateTaskScreen extends StatefulWidget {
 class _CreateTaskScreenState extends State<CreateTaskScreen> {
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _contentController = TextEditingController();
+  final GlobalKey<FormState> _formkey = GlobalKey<FormState>();
   bool isCreate = true;
   @override
   void initState() {
@@ -52,16 +51,18 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                     title: _titleController.text,
                     content: _contentController.text,
                     timeModified: DateTime.now());
-                if (widget.task != null) {
-                  if (widget.task!.title != task.title ||
-                      widget.task!.content != task.content) {
-                    TaskRepository().editTask(task);
+                if (_formkey.currentState!.validate()) {
+                  if (widget.task != null) {
+                    if (widget.task!.title != task.title ||
+                        widget.task!.content != task.content) {
+                      TaskRepository().editTask(task);
+                    }
+                  } else {
+                    TaskRepository().createTask(task);
                   }
-                } else {
-                  TaskRepository().createTask(task);
+                  Navigator.pop(context);
                 }
-                Navigator.pop(context);
-                ;
+
               },
               child: Icon(
                 isCreate ? Icons.save : Icons.edit,
@@ -71,72 +72,27 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
           )
         ],
       ),
-      body: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 20),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const SizedBox(height: 10),
-            const Padding(
-              padding: EdgeInsets.symmetric(vertical: 10.0),
-              child: Text(
-                'Title',
-                textAlign: TextAlign.left,
-                style: TextStyle(
-                  color: Colors.black,
-                  fontWeight: FontWeight.w600,
-                  fontSize: 16,
-                ),
-              ),
-            ),
-            TextFormField(
-              style: const TextStyle(
-                color: Colors.black,
-                fontWeight: FontWeight.w600,
-                fontSize: 16,
-              ),
-              decoration: InputDecoration(
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10),
-                  borderSide: const BorderSide(
+      body: Form(
+        key: _formkey,
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 20),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const SizedBox(height: 10),
+              const Padding(
+                padding: EdgeInsets.symmetric(vertical: 10.0),
+                child: Text(
+                  'Title',
+                  textAlign: TextAlign.left,
+                  style: TextStyle(
                     color: Colors.black,
-                  ),
-                ),
-                hintText: 'Enter title',
-                hintStyle: TextStyle(
-                  color: Colors.grey.shade400,
-                  fontSize: 15,
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10),
-                  borderSide: const BorderSide(
-                    color: colorPrimary,
+                    fontWeight: FontWeight.w600,
+                    fontSize: 16,
                   ),
                 ),
               ),
-              cursorColor: colorPrimary,
-              controller: _titleController,
-            ),
-            const Padding(
-              padding: EdgeInsets.symmetric(vertical: 10.0),
-              child: Text(
-                'Content',
-                textAlign: TextAlign.left,
-                style: TextStyle(
-                  color: Colors.black,
-                  fontWeight: FontWeight.w600,
-                  fontSize: 16,
-                ),
-              ),
-            ),
-            SizedBox(
-              height: 400,
-              child: TextFormField(
-                inputFormatters: [
-                  LengthLimitingTextInputFormatter(1000),
-                ],
-                maxLength: 1000,
-                maxLines: 100,
+              TextFormField(
                 style: const TextStyle(
                   color: Colors.black,
                   fontWeight: FontWeight.w600,
@@ -149,23 +105,77 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                       color: Colors.black,
                     ),
                   ),
+                  hintText: 'Enter title',
+                  hintStyle: TextStyle(
+                    color: Colors.grey.shade400,
+                    fontSize: 15,
+                  ),
                   focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10),
                     borderSide: const BorderSide(
                       color: colorPrimary,
                     ),
                   ),
-                  hintText: 'Enter content',
-                  hintStyle: TextStyle(
-                    color: Colors.grey.shade400,
-                    fontSize: 15,
-                  ),
                 ),
                 cursorColor: colorPrimary,
-                controller: _contentController,
+                controller: _titleController,
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return "Please enter a title";
+                  }
+                  return null;
+                },
               ),
-            ),
-          ],
+              const Padding(
+                padding: EdgeInsets.symmetric(vertical: 10.0),
+                child: Text(
+                  'Content',
+                  textAlign: TextAlign.left,
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontWeight: FontWeight.w600,
+                    fontSize: 16,
+                  ),
+                ),
+              ),
+              SizedBox(
+                height: 400,
+                child: TextFormField(
+                  inputFormatters: [
+                    LengthLimitingTextInputFormatter(1000),
+                  ],
+                  maxLength: 1000,
+                  maxLines: 100,
+                  style: const TextStyle(
+                    color: Colors.black,
+                    fontWeight: FontWeight.w600,
+                    fontSize: 16,
+                  ),
+                  decoration: InputDecoration(
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10),
+                      borderSide: const BorderSide(
+                        color: Colors.black,
+                      ),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10),
+                      borderSide: const BorderSide(
+                        color: colorPrimary,
+                      ),
+                    ),
+                    hintText: 'Enter content',
+                    hintStyle: TextStyle(
+                      color: Colors.grey.shade400,
+                      fontSize: 15,
+                    ),
+                  ),
+                  cursorColor: colorPrimary,
+                  controller: _contentController,
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
